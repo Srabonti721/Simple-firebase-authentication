@@ -23,8 +23,16 @@ const Login = () => {
     const handleSignInWithGithub = () =>{
         signInWithPopup(auth,gitHubProvider)
         .then((result)=>{
-            console.log(result);   
-            setUser(result.user)    
+            const loggedInUser = result.user
+            console.log(loggedInUser);   
+            if(!loggedInUser.email && loggedInUser?.providerData ?.length){
+                console.log("user email is not directly provided");
+                if(loggedInUser.providerData[0].email){
+                    loggedInUser.email = loggedInUser.providerData[0].email;
+                   setUser(loggedInUser)  
+                }
+            }
+             
         })
         .catch((error)=>{
             console.log(error);
@@ -56,8 +64,8 @@ const Login = () => {
             }
             {                                                                                                                                
                 user && <div>
-                    <h2>{user.displayName}</h2>
-                    <p>{user.email}</p>
+                    <h2>user name : {user.displayName}</h2>
+                    <p> email :{user.email}</p>
                     <img src={user.photoURL} alt="" />
                 </div>
             }
